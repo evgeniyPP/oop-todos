@@ -19,12 +19,12 @@ export class Api {
     }
   }
 
-  async createTask(name) {
+  async createTask(value) {
     try {
-      const response = fetch(this.url, {
+      const response = await fetch(this.url, {
         method: 'POST',
         headers: this.headers,
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ value }),
       });
 
       return this.#parseResponse(response);
@@ -35,7 +35,7 @@ export class Api {
 
   async deleteTask(id) {
     try {
-      const response = fetch(`${this.url}/${id}`, {
+      const response = await fetch(`${this.url}/${id}`, {
         method: 'DELETE',
         headers: this.headers,
       });
@@ -54,5 +54,3 @@ export class Api {
     return res.json();
   }
 }
-
-

@@ -20,18 +20,18 @@ export class Todo {
   createTodo() {
     this.#todoElement = Todo.#template.cloneNode(true).children[0];
 
-    const textElement = this.#todoElement.querySelector('todolist-item__text');
-    textElement.textContent = this.#data.name;
+    const textElement = this.#todoElement.querySelector('.todolist-item__text');
+    textElement.textContent = this.#data.value;
     textElement.dataset.todoId = this.#data.id;
 
-    const deleteButtonElement = this.#todoElement.querySelector('.todolist-item__del')
+    const deleteButtonElement = this.#todoElement.querySelector('.todolist-item__del');
     deleteButtonElement.addEventListener('click', () => {
       this.#onDelete(this);
     });
 
-    const copyButtonElement = this.#todoElement.querySelector('.todolist-item__copy')
+    const copyButtonElement = this.#todoElement.querySelector('.todolist-item__copy');
     copyButtonElement.addEventListener('click', () => {
-      this.#onCopy(this.#data.name);
+      this.#onCopy(this.#data.value);
     });
 
     return this.#todoElement;

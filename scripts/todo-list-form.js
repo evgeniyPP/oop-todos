@@ -8,8 +8,11 @@ export class TodoListForm {
 
     this.#formElement.addEventListener('submit', e => {
       e.preventDefault();
-      const newTodoName = this.#formElement.elements['todo-name'].value;
-      this.#onSubmit(newTodoName);
+
+      const inputElement = this.#formElement.elements['new-todo-value'];
+      this.#onSubmit(inputElement.value);
+
+      inputElement.value = '';
     });
   }
 }

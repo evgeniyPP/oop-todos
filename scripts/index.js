@@ -1,10 +1,10 @@
-import { Api } from './api';
-import { Todo } from './todo';
-import { TodoList } from './todo-list';
-import { TodoListForm } from './todo-list-form';
+import { Api } from './api.js';
+import { Todo } from './todo.js';
+import { TodoList } from './todo-list.js';
+import { TodoListForm } from './todo-list-form.js';
 
 const config = {
-  url: '',
+  url: 'http://localhost:3000/todos',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -37,16 +37,16 @@ async function getTasks() {
 async function handleTodoDelete(todo) {
   try {
     await api.deleteTask(todo.getId());
-    todo.remove();
+    todo.removeTodo();
   } catch (error) {
     console.error('Ошибка при удалении');
     console.error(error);
   }
 }
 
-async function handleTodoCreate(name) {
+async function handleTodoCreate(value) {
   try {
-    const todo = await api.createTask(name);
+    const todo = await api.createTask(value);
     todoList.renderItem(todo);
   } catch (error) {
     console.error('Ошибка при создании');
