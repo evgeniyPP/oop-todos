@@ -1,56 +1,45 @@
-export class Api {
+export class API {
   url;
-  headers;
 
-  constructor({ url, headers }) {
+  constructor(url) {
     this.url = url;
-    this.headers = headers;
   }
 
   async getTasks() {
-    try {
-      const response = await fetch(this.url, {
-        headers: this.headers,
-      });
+    const response = await fetch(this.url);
 
-      return this.#parseResponse(response);
-    } catch (error) {
-      Promise.reject(error);
+    if (!response.ok) {
+      return Promise.reject(`Ошибка: ${response.status}`);
     }
+
+    return response.json();
   }
 
   async createTask(value) {
-    try {
-      const response = await fetch(this.url, {
-        method: 'POST',
-        headers: this.headers,
-        body: JSON.stringify({ value }),
-      });
+    const response = await fetch(this.url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ value }),
+    });
 
-      return this.#parseResponse(response);
-    } catch (error) {
-      Promise.reject(new Error(msg));
+    if (!response.ok) {
+      return Promise.reject(`Ошибка: ${response.status}`);
     }
+
+    return response.json();
   }
 
   async deleteTask(id) {
-    try {
-      const response = await fetch(`${this.url}/${id}`, {
-        method: 'DELETE',
-        headers: this.headers,
-      });
+    const response = await fetch(`${this.url}/${id}`, {
+      method: 'DELETE',
+    });
 
-      return this.#parseResponse(response);
-    } catch (error) {
-      Promise.reject(new Error(msg));
-    }
-  }
-
-  #parseResponse(res) {
-    if (!res.ok) {
-      return Promise.reject(new Error(`Произошла ошибка со статус-кодом ${res.status}`));
+    if (!response.ok) {
+      return Promise.reject(`Ошибка: ${response.status}`);
     }
 
-    return res.json();
+    return response.json();
   }
 }
