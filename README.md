@@ -1,4 +1,4 @@
-## TODO List (OOP)
+## TODO List
 
 The backend is powered by [JSON Server](https://github.com/typicode/json-server):
 

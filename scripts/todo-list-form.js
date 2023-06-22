@@ -1,18 +1,12 @@
-export class TodoListForm {
-  /** @type {HTMLFormElement} */ #formElement;
-  /** @type {Function} */ #onSubmit;
+import { handleTodoCreate } from './utils.js';
 
-  constructor(formSelector, onSubmit) {
-    this.#formElement = document.querySelector(formSelector);
-    this.#onSubmit = onSubmit;
+const formElement = document.querySelector('.todolist-form');
 
-    this.#formElement.addEventListener('submit', e => {
-      e.preventDefault();
+formElement.addEventListener('submit', e => {
+  e.preventDefault();
 
-      const inputElement = this.#formElement.elements['new-todo-value'];
-      this.#onSubmit(inputElement.value);
+  const inputElement = formElement.elements['new-todo-value'];
+  handleTodoCreate(inputElement.value);
 
-      inputElement.value = '';
-    });
-  }
-}
+  inputElement.value = '';
+});

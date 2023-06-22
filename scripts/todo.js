@@ -1,44 +1,23 @@
-export class Todo {
-  #todoElement;
-  #data;
-  #onDelete;
-  #onCopy;
+import { handleTodoDelete, handleTodoCreate } from './utils.js';
 
-  static #template = document.querySelector('#todolist-item-template').content;
+export const template = document.querySelector('#todolist-item-template').content;
 
-  constructor(data, onDelete, onCopy) {
-    this.#todoElement = null;
-    this.#data = data;
-    this.#onDelete = onDelete;
-    this.#onCopy = onCopy;
-  }
+export function createTodoElement(data) {
+  const todoElement = template.cloneNode(true).children[0];
 
-  getId() {
-    return this.#data.id;
-  }
+  const textElement = todoElement.querySelector('.todolist-item__text');
+  textElement.textContent = data.value;
+  textElement.dataset.id = data.id;
 
-  createTodo() {
-    this.#todoElement = Todo.#template.cloneNode(true).children[0];
+  const deleteButtonElement = todoElement.querySelector('.todolist-item__del');
+  deleteButtonElement.addEventListener('click', () => {
+    handleTodoDelete(data.id, todoElement);
+  });
 
-    const textElement = this.#todoElement.querySelector('.todolist-item__text');
-    textElement.textContent = this.#data.value;
-    textElement.dataset.todoId = this.#data.id;
+  const copyButtonElement = todoElement.querySelector('.todolist-item__copy');
+  copyButtonElement.addEventListener('click', () => {
+    handleTodoCreate(data.value);
+  });
 
-    const deleteButtonElement = this.#todoElement.querySelector('.todolist-item__del');
-    deleteButtonElement.addEventListener('click', () => {
-      this.#onDelete(this);
-    });
-
-    const copyButtonElement = this.#todoElement.querySelector('.todolist-item__copy');
-    copyButtonElement.addEventListener('click', () => {
-      this.#onCopy(this.#data.value);
-    });
-
-    return this.#todoElement;
-  }
-
-  removeTodo() {
-    this.#todoElement.remove();
-    this.#todoElement = null;
-  }
+  return todoElement;
 }
