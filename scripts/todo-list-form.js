@@ -1,16 +1,12 @@
 export class TodoListForm {
-  /** @type {HTMLFormElement} */ #formElement;
-  /** @type {Function} */ #onSubmit;
+  constructor(formSelector, createTodo) {
+    this.formElement = document.querySelector(formSelector);
 
-  constructor(formSelector, onSubmit) {
-    this.#formElement = document.querySelector(formSelector);
-    this.#onSubmit = onSubmit;
-
-    this.#formElement.addEventListener('submit', e => {
+    this.formElement.addEventListener('submit', e => {
       e.preventDefault();
 
-      const inputElement = this.#formElement.elements['new-todo-value'];
-      this.#onSubmit(inputElement.value);
+      const inputElement = this.formElement.elements['new-todo-value'];
+      createTodo(inputElement.value);
 
       inputElement.value = '';
     });

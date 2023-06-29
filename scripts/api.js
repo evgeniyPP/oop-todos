@@ -1,45 +1,43 @@
-export class API {
-  url;
-
+export class Api {
   constructor(url) {
     this.url = url;
   }
 
-  async getTasks() {
-    const response = await fetch(this.url);
+  fetchTodos() {
+    return fetch(this.url).then(response => {
+      if (!response.ok) {
+        return Promise.reject(`Ошибка: ${response.status}`);
+      }
 
-    if (!response.ok) {
-      return Promise.reject(`Ошибка: ${response.status}`);
-    }
-
-    return response.json();
+      return response.json();
+    });
   }
 
-  async createTask(value) {
-    const response = await fetch(this.url, {
+  createTodo(value) {
+    return fetch(this.url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ value }),
+    }).then(response => {
+      if (!response.ok) {
+        return Promise.reject(`Ошибка: ${response.status}`);
+      }
+
+      return response.json();
     });
-
-    if (!response.ok) {
-      return Promise.reject(`Ошибка: ${response.status}`);
-    }
-
-    return response.json();
   }
 
-  async deleteTask(id) {
-    const response = await fetch(`${this.url}/${id}`, {
+  deleteTodos(id) {
+    return fetch(`${this.url}/${id}`, {
       method: 'DELETE',
+    }).then(response => {
+      if (!response.ok) {
+        return Promise.reject(`Ошибка: ${response.status}`);
+      }
+
+      return response.json();
     });
-
-    if (!response.ok) {
-      return Promise.reject(`Ошибка: ${response.status}`);
-    }
-
-    return response.json();
   }
 }

@@ -1,44 +1,28 @@
 export class Todo {
-  #todoElement;
-  #data;
-  #onDelete;
-  #onCopy;
+  static template = document.querySelector('#todolist-item-template').content;
 
-  static #template = document.querySelector('#todolist-item-template').content;
-
-  constructor(data, onDelete, onCopy) {
-    this.#todoElement = null;
-    this.#data = data;
-    this.#onDelete = onDelete;
-    this.#onCopy = onCopy;
+  constructor(createTodo, deleteTodo) {
+    this.createTodo = createTodo;
+    this.deleteTodo = deleteTodo;
   }
 
-  getId() {
-    return this.#data.id;
-  }
+  createElement(data) {
+    const todoElement = Todo.template.cloneNode(true).children[0];
 
-  createTodo() {
-    this.#todoElement = Todo.#template.cloneNode(true).children[0];
+    const textElement = todoElement.querySelector('.todolist-item__text');
+    textElement.textContent = data.value;
+    textElement.dataset.id = data.id;
 
-    const textElement = this.#todoElement.querySelector('.todolist-item__text');
-    textElement.textContent = this.#data.value;
-    textElement.dataset.todoId = this.#data.id;
-
-    const deleteButtonElement = this.#todoElement.querySelector('.todolist-item__del');
+    const deleteButtonElement = todoElement.querySelector('.todolist-item__del');
     deleteButtonElement.addEventListener('click', () => {
-      this.#onDelete(this);
+      this.deleteTodo(data.id, todoElement);
     });
 
-    const copyButtonElement = this.#todoElement.querySelector('.todolist-item__copy');
+    const copyButtonElement = todoElement.querySelector('.todolist-item__copy');
     copyButtonElement.addEventListener('click', () => {
-      this.#onCopy(this.#data.value);
+      this.createTodo(data.value);
     });
 
-    return this.#todoElement;
-  }
-
-  removeTodo() {
-    this.#todoElement.remove();
-    this.#todoElement = null;
+    return todoElement;
   }
 }

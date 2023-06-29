@@ -1,42 +1,50 @@
-import { API } from './api.js';
-import { Todo } from './todo.js';
-import { TodoList } from './todo-list.js';
+import { Api } from './api.js';
 import { TodoListForm } from './todo-list-form.js';
+import { TodoList } from './todo-list.js';
+import { Todo } from './todo.js';
 
-const api = new API('http://localhost:3000/todos');
-const todoList = new TodoList('.todolist', handleRender);
+const api = new Api('http://localhost:3000/todos');
+const todoList = new TodoList('.todolist');
+
 new TodoListForm('.todolist-form', handleTodoCreate);
-getTasks();
 
-function handleRender(data) {
-  const todo = new Todo(data, handleTodoDelete, handleTodoCreate);
-  const todoElement = todo.createTodo();
+getTodos();
+
+function getTodos() {
+  api
+    .fetchTodos()
+    .then(todos => {
+      todos.forEach(todo => render(todo));
+    })
+    .catch(err => {
+      console.error(`Ошибка: ${err}`);
+    });
+}
+
+function handleTodoCreate(value) {
+  api
+    .createTodo(value)
+    .then(todo => {
+      render(todo);
+    })
+    .catch(err => {
+      console.error(`Ошибка: ${err}`);
+    });
+}
+
+function handleTodoDelete(id, element) {
+  api
+    .deleteTodos(id)
+    .then(() => {
+      element.remove();
+    })
+    .catch(err => {
+      console.error(`Ошибка: ${err}`);
+    });
+}
+
+function render(data) {
+  const todo = new Todo(handleTodoCreate, handleTodoDelete);
+  const todoElement = todo.createElement(data);
   todoList.addItem(todoElement);
-}
-
-async function getTasks() {
-  try {
-    const todos = await api.getTasks();
-    todoList.renderItems(todos);
-  } catch (error) {
-    console.error(`Ошибка при загрузке: ${error}`);
-  }
-}
-
-async function handleTodoDelete(todo) {
-  try {
-    await api.deleteTask(todo.getId());
-    todo.removeTodo();
-  } catch (error) {
-    console.error(`Ошибка при удалении: ${error}`);
-  }
-}
-
-async function handleTodoCreate(value) {
-  try {
-    const todo = await api.createTask(value);
-    todoList.renderItem(todo);
-  } catch (error) {
-    console.error(`Ошибка при создании: ${error}`);
-  }
 }
